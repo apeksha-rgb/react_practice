@@ -3,7 +3,7 @@ import {Client , Account, ID} from "appwrite"
 
 export class AuthService {
     client = new Client()
-    account
+    account 
 
     constructor(){
         this.client
@@ -14,24 +14,30 @@ export class AuthService {
 
     async createAccount({email, password, name}){
         try{
+            console.log('Creating user with email: ', email)
             const userAccount = await this.account.create(ID.unique(), email,password,name)
             if(userAccount){
+                console.log("user created successfully", userAccount)
                 //call another method
-                return this.login({email,password})
+                return await this.login({email,password})
             }else{
+                console.error('account creation failed,no response')
                 return userAccount
 
             }
         }catch(error){
+            console.error('Error creating Account: ', error)
             throw error
         }
     }
 
     async login({email, password}){
         try{
-            return await this.account.createEmailSession(email,password)
+            console.log('creating session for user:', email)
+            return await this.account.createSession(email,password)
 
         }catch(error){
+            console.error('error during login: ', error)
             throw error
         }
     }

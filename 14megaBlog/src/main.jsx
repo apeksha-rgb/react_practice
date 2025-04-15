@@ -1,5 +1,6 @@
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { Provider } from 'react-redux'
@@ -48,7 +49,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path:"/add-posts",
+    path:"/add-post",
     element:<AuthLayout  authentication>
       <AddPost />
     </AuthLayout>
@@ -70,7 +71,7 @@ const router = createBrowserRouter([
 },
 ])
 
-createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store} >
     <RouterProvider router={router}/>

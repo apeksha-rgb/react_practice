@@ -17,10 +17,10 @@ function Signup() {
     const create = async(data) => {
         setError("")
         try {
-            const userData = await authService.createAccount(data)
-            if(userData){
-                const userData = await authService.getCurrentUser()
-                if(userData) dispatch(login(userData))
+            const createdUser = await authService.createAccount(data)
+            if(createdUser){
+                const currentUser = await authService.getCurrentUser()
+                if(currentUser) dispatch(login(currentUser))
                 navigate("/")
             }
         }catch(error){
@@ -60,12 +60,11 @@ function Signup() {
                         label = "Email: "
                         placeholder='Enter your emial'
                         type = "email"
-                        {
-                            ...register("email",{
+                        {...register("email",{
                                 required: true,
-                                validate:{
-                                    matchPatern: (value) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value) ||
-                                "Email address must be a valid address",
+                                pattern:{
+                                value:  /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
+                                message:"Email address must be a valid address",
                                 }
                             })
                         }
