@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 
 
 
+
 export default function Protected(
   {children, authentication=true}
 ){
@@ -13,7 +14,7 @@ export default function Protected(
   const authStatus = useSelector(state => state.auth.status)
 
   useEffect(() => {
-    if(authStatus === null) return
+    if(authStatus === null || authStatus === undefined) return
 
     if(authentication && authStatus !== authentication){
       navigate("/login")
@@ -25,6 +26,6 @@ export default function Protected(
   },[authStatus,navigate,authentication])
 
 
- return loader || authStatus === null ? <h1>Loading...</h1> : <>{children}</>
+ return (loader || authStatus === null || authStatus=== undefined) ? <h1>Loading...</h1> : <>{children}</>
 
 }

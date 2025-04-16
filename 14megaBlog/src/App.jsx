@@ -13,12 +13,14 @@ function App() {
   useEffect( () => {
     authService.getCurrentUser()
     .then((userData) => {
+      console.log("checking current session: ", userData)
       if(userData){
-        dispatch(login({userData}))
+        dispatch(login(userData))
       }else{
         dispatch(logout())
       }
     })
+    .catch((err)=> console.log("error in getCurrentUser", err))
     .finally(()=> setLoading(false))
   },[])
 
