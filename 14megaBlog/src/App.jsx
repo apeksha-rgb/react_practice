@@ -13,6 +13,9 @@ function App() {
   useEffect( () => {
     authService.getCurrentUser()
     .then((userData) => {
+      if(!userData){
+        return console.log("no user found Sigup / login to continue")
+      }
       console.log("checking current session: ", userData)
       if(userData){
         dispatch(login(userData))

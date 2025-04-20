@@ -46,7 +46,7 @@ function PostForm({post}) {
             
             const dbPost = await appwriteService.createPost({
                 ...data,
-                userId:userData.$id,
+                userId: userData.$id,
             })
             if(dbPost){
                 navigate(`/post/${dbPost.$id}`)

@@ -34,7 +34,7 @@ export class AuthService {
     async login({email, password}){
         try{
             console.log('creating session for user:', email)
-            return await this.account.createSession(email,password)
+            return await this.account.createEmailPasswordSession(email,password)
 
         }catch(error){
             console.error('error during login: ', error)
@@ -44,14 +44,14 @@ export class AuthService {
 
     async getCurrentUser(){
         try{
-            const session = await this.account.getSession("current")
-            if(session){
-                return await this.account.get()
-            }
+            const user = await this.account.get()
+                return user
+            
         }catch(error){
-            console.log("Appwrite getCurrentUser error", error);
+            console.log("Appwrite getCurrentUser error", error?.message || error);
+            return null
         }
-        return null
+        
     }
 
     async logout(){
