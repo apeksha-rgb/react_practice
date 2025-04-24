@@ -5,6 +5,8 @@ import conf from '../conf/conf'
 
 
 export default function RTE({name, control, label, defaultValue =""}) {
+  
+
   return (
     <div className='w-full'>
         {label && <label className='inline-block mb-1 pl-1'>{label}</label>}
@@ -13,13 +15,17 @@ export default function RTE({name, control, label, defaultValue =""}) {
     <Controller 
     name={name || "content"}
     control={control}
+    
     render={({field:{onChange}}) => (
         <Editor
+        
         apiKey = {conf.tinymceApiKey}
         initialValue={defaultValue}
+        
         init={{
             
             initialValue: defaultValue,
+            
             height: 500,
             menubar: true,
             plugins: [
@@ -44,8 +50,9 @@ export default function RTE({name, control, label, defaultValue =""}) {
                 "wordcount",
                 "anchor",
             ],
+            directionality:'ltr',
             toolbar:
-            "undo redo | blocks | image | bold italic forecolor | alignleft aligncenter bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |removeformat | help",
+            "undo redo | blocks | image | bold italic forecolor | alignleft aligncenter bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent |removeformat | help ",
             content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }"
         }}
         onEditorChange={onChange}

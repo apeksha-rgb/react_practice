@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 
 
 function PostForm({post}) {
-  const {register, handleSubmit, watch, setValue, control,getValues} = useForm({
+  const {register, handleSubmit, watch, setValue, control, getValues} = useForm({
     defaultValues:{
         title:post?.title || '',
         slug: post?.slug || '',
@@ -21,16 +21,23 @@ function PostForm({post}) {
   const userData = useSelector((state) => state.auth.userData)
 
   const submit = async (data)=> {
-    if(post){
-        const file = data.image[0] ? await appwriteService.uploadFile(data.image[0]): null
+    try{
+        let file = null
 
+        if(data.image[0]){
+            file = await appwriteService.uploadFile(data.image[0]) 
+        }
+    
+
+    if(post){
+        
         if(file){
             appwriteService.deleteFile(post.featuredImage)
         }
 
         const dbPost = await appwriteService.updatePost(post.$id, {
             ...data, 
-            featuredImage: file? file.$id : undefined,
+            featuredImage: file? file.$id : post.featuredImage,
         })
         if(dbPost){
             navigate(`./post/${dbPost.$id}`)
@@ -38,11 +45,10 @@ function PostForm({post}) {
         }
         
     }else{
-        const file = await appwriteService.uploadFile(data.image[0])
-
+       
         if(file){
-            const fileId =file.$id
-            data.featuredImage =fileId
+            
+            data.featuredImage =file.$id
             
             const dbPost = await appwriteService.createPost({
                 ...data,
@@ -52,6 +58,8 @@ function PostForm({post}) {
                 navigate(`/post/${dbPost.$id}`)
             }
         }
+    } }catch (error){
+        console.log("Error while submitting the form:", error)
     }
   }
 
@@ -75,6 +83,18 @@ function PostForm({post}) {
     })
     return () => subscription.unsubscribe()
   },[watch, slugTransform, setValue])
+
+  const renderImagePreview = (featuredImage) => {
+    try {
+      if (featuredImage) {
+        const previewUrl = appwriteService.getFilePreview(featuredImage).href;
+        return <img src={previewUrl} alt="Featured" className="rounded-lg" />;
+      }
+    } catch (error) {
+      console.error("Error loading featured image:", featuredImage);
+    }
+    return <div className="w-full h-40 bg-gray-300 rounded-lg flex items-center justify-center text-gray-600 text-sm">No Image Available</div>;
+  }
 
     return (
         <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
@@ -104,13 +124,9 @@ function PostForm({post}) {
                 accept="image/png, image/jpg, image/jpeg, image/gif"
                 {...register("image", { required: !post })}
             />
-            {post && (
+            {post?.featuredImage && (
                 <div className="w-full mb-4">
-                    <img
-                        src={appwriteService.getFilePreview(post.featuredImage)}
-                        alt={post.title}
-                        className="rounded-lg"
-                    />
+                   {renderImagePreview(post.featuredImage)}
                 </div>
             )}
             <Select

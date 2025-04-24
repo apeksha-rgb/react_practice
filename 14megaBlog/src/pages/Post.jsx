@@ -46,12 +46,12 @@ function Post() {
 
                 {isAuthor && (<div className='absolute right-6 top-6'>
                     <Link to={`/edit-post/${post.$id}`}>
-                    <Buttton bgColor = "bg-green-500" className="mr-3">
+                    <Button bgColor = "bg-green-500" className="mr-3">
                         Edit
-                        </Buttton></Link>
-                        <Buttton bgColor="bg-red-500" onClick = {deletePost}>
+                        </Button></Link>
+                        <Button bgColor="bg-red-500" onClick = {deletePost}>
                             Delete
-                        </Buttton>
+                        </Button>
 
                 </div>
             )}
