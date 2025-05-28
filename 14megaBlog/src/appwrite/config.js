@@ -1,4 +1,4 @@
-import conf from "../conf/conf";
+import conf from "../conf/conf.js";
 import {Client , ID, Databases, Storage, Query} from "appwrite"
 
 
@@ -34,7 +34,7 @@ export class Service{
             return createPost
 
         }catch(error){
-            throw error;
+            console.log("Appwrite service :: createPost :: error", error);
         }
     }
 
@@ -53,7 +53,7 @@ export class Service{
             )
 
         }catch(error){
-            throw error
+            console.log("Appwrite service :: updatePost :: error",error)
         }
     }
 
@@ -67,7 +67,8 @@ export class Service{
             return true
 
         }catch(error){
-            throw error
+            console.log("Appwrite serive :: deletePost :: error", error);
+            return false
             
         }
     }
@@ -81,7 +82,8 @@ export class Service{
             )
 
         }catch(error){
-            throw error
+            console.log("Appwrite serive :: getPost :: error", error);
+            return false
         }
 
     }
@@ -96,7 +98,8 @@ export class Service{
             )
 
         }catch(error){
-            throw error
+            console.log("Appwrite serive :: getPosts :: error", error);
+            return false
         }
     }
     //file upload service
@@ -109,7 +112,8 @@ export class Service{
             )
 
         }catch (error){
-            throw error
+            console.log("Appwrite serive :: uploadFile :: error", error);
+            return false
         }
     }
 
@@ -121,17 +125,26 @@ export class Service{
             )
             return true
         }catch(error){
-            throw error
+            console.log("Appwrite serive :: deleteFile :: error", error);
+            return false
         }
     }
+    getFilePreview(fileId) {
+    // Ye sirf paid plan pe chalega (image transformation)
+    return this.bucket.getFilePreview(
+        conf.appwriteBucketId,
+        fileId
+    );
+}
 
-    getFilePreview(fileId){
-        return this.bucket.getFilePreview(
-            conf.appwriteBucketId,
-            fileId
-
-        )
-    }
+getFileView(fileId) {
+    // Ye free plan pe bhi chalega (raw file URL)
+    return this.bucket.getFileView(
+        conf.appwriteBucketId,
+        fileId
+    );
+    
+}
 }
 
 const service = new Service()

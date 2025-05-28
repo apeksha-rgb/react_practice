@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux'
 
 function Post() {
     const [post, setPost] = useState(null)
+    const [imageUrl ,setImageUrl] = useState ("")
     const {slug} = useParams()
     const navigate = useNavigate()
 
@@ -25,6 +26,21 @@ function Post() {
         }else navigate("/")
     },[slug, navigate])
 
+    useEffect(()=> {
+        async function fetchImageUrl() {
+            if(post?.featuredImage){
+                try{
+                    const url = await appwriteService.getFileView(post.featuredImage)
+                    setImageUrl(url)
+                }catch(err){
+                    console.log("error Loading image : ",err)
+                }
+            }
+            
+        }
+        fetchImageUrl()
+    },[post])
+
     const deletePost = () => {
         appwriteService.deletePost(post.$id).then((status) => {
             if(status){
@@ -39,7 +55,7 @@ function Post() {
         <Container>
             <div className ="w-full flex justify-center mb-4 relative border rounded-xl p-2">
                 <img 
-                src={appwriteService.getFilePreview(post.featuredImage)}
+                src={imageUrl}
                 alt={post.title}
                 className='rounded-xl'
                 />
